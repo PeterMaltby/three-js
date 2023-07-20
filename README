@@ -1,0 +1,20 @@
+# README
+# author: peterm
+# created: 2023-07-20
+#  _____  _  _  ___  ___  ___      ___  
+# |_   _|| || || _ \| __|| __|___ |   \ 
+#   | |  | __ ||   /| _| | _||___|| |) |
+#   |_|  |_||_||_|_\|___||___|    |___/ 
+#                                       
+#############################################################
+
+A 3d renderer in javascript!
+
+# how to run
+
+`npm install`
+run on local machine
+`npm run dev`
+run on local network
+`npm run dev:local` 
+
