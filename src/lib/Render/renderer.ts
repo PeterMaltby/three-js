@@ -9,6 +9,9 @@ const NEARCLIPPING = 0.1;
 const FARCLIPPING = 10;
 const HI_DPI = true;
 
+const FPS_LOG = false;
+const EVENT_LOG = true;
+
 export function renderer (contextName: string) {
     const gameEngine = new GameEngine(contextName);
     gameEngine.setup();
@@ -24,6 +27,7 @@ export function renderer (contextName: string) {
 
 class GameEngine {
     private renderer: THREE.WebGLRenderer;
+    private canvas: HTMLCanvasElement;
     private scene: THREE.Scene;
     private camera: THREE.PerspectiveCamera;
     private box: THREE.Mesh;
@@ -34,6 +38,7 @@ class GameEngine {
 
     constructor(contextName: string) {
         const canvas = document.getElementById(contextName) as HTMLCanvasElement;
+        this.canvas = canvas;
         this.renderer = new THREE.WebGLRenderer({antialias: ANTI_ALIAS, canvas});
 
         if (HI_DPI) {
@@ -55,10 +60,12 @@ class GameEngine {
         this.box = new THREE.Mesh(geometry, material);
         this.light = new THREE.DirectionalLight( 0xffffff, 1);
 
+
     }
 
     replaceCanvas(contextName: string) {
         const canvas = document.getElementById(contextName) as HTMLCanvasElement;
+        this.canvas = canvas;
         this.renderer = new THREE.WebGLRenderer({antialias: ANTI_ALIAS, canvas});
 
         if (HI_DPI) {
@@ -72,6 +79,7 @@ class GameEngine {
 
         this.camera.aspect = canvas.clientWidth / canvas.clientHeight;;
         this.camera.updateProjectionMatrix();
+
     }
 
     step = () =>  {
@@ -80,24 +88,43 @@ class GameEngine {
         const elapsed = timeNow - this.previousTimeStamp;
         this.previousTimeStamp = timeNow;
 
-        console.log(`elasped:  ${elapsed}ms ${1000/elapsed}fps`);
+
+        if (FPS_LOG) console.log(`elasped:  ${elapsed}ms ${1000/elapsed}fps`);
         const t1 = performance.now();
         this.update(elapsed);
         const t2 = performance.now();
         this.draw();
         const t3 = performance.now();
 
-        console.log(`update: ${t2-t1}ms draw: ${t3-t2}ms total: ${t3-t1}ms ${1000/(t3-t1)}fps`);
+        if (FPS_LOG) console.log(`update: ${t2-t1}ms draw: ${t3-t2}ms total: ${t3-t1}ms ${1000/(t3-t1)}fps`);
 
         window.requestAnimationFrame(this.step);
     }
 
     public setup() {
+
+
         this.light.position.set(-1,2,4);
         this.camera.position.z = 5;
 
         this.scene.add(this.light);
         this.scene.add(this.box);
+
+        document.addEventListener("keydown", this.keydown, false);
+    }
+
+    private keydown(event: KeyboardEvent) {
+        if (EVENT_LOG) console.log(`key press = ${event.key}`);
+
+        console.log(this);
+
+        switch (event.key) {
+            case "ArrowUp": {
+                const direction = new THREE.Vector3();
+                this.camera.getWorldDirection(direction);
+                this.camera.position.add( direction );
+            }
+        }
     }
 
 
