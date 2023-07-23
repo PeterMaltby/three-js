@@ -9,7 +9,7 @@
     import Renderer from "$lib/Render/Renderer.svelte";
 </script>
 
-<Header>
+<!--<Header>
     <HeaderSection>
         <HeaderItem>
             <DropDownMenu label="settings" >
@@ -36,7 +36,7 @@
         <a class="" href="/dev">dev</a>
         </Container>
     </HeaderNav>
-</Header>
+</Header> -->
 
 <Renderer />
 
